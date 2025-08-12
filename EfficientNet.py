@@ -45,7 +45,7 @@ def get_input_size(model):
 
 if __name__ == '__main__':
     def main():
-        model_name = 'EfficientNet_B3'
+        model_name = 'EfficientNet_B2'
         input_size = get_input_size(model_name)
         hyper = trainer.TrainConfig(batch_size=64, patience=5, save_point=5, inplace=input_size, workers=16)
 
