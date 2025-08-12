@@ -1,33 +1,31 @@
 from pathlib import Path
+import shutil, os
 
 
-def split(dataset_path:Path, val_rate=0.2, test_rate=0.1):
-    train_dir=dataset_path/'train'
-    for d in train_dir.iterdir():
-        if not d.is_dir():
-            continue
+def dataset_split(input_dir:Path|str, val_rate:float = 0.2 , test_rate:float = 0.1):
+    input_dir = Path(input_dir)
+    assert val_rate + test_rate <= 1, '합계 비율이 1 이하여야 합니다'
+    assert input_dir.is_dir(), '입력및 출력 디렉토리는 반드시 디렉토리여야합니다'
 
-        flist=[f for f in d.iterdir()]
-        num_files=len(flist)
-
-        val_size=int(num_files*val_rate)
-        test_size=int(num_files*test_rate)
+    for sub_dir in input_dir.iterdir():
+        files = list(sub_dir.iterdir())
+        file_num = len(files)
+        val_num = int(file_num * val_rate)
+        test_num = int(file_num * test_rate)
         
-        val_files=flist[:val_size]
-        test_files=flist[val_size:val_size+test_size]
+        val_files = files[:val_num]
+        test_files = files[val_num:val_num+test_num]
+        train_files = files[val_num+test_num:]
 
-        val_dir=dataset_path/'valid'/d.name
-        val_dir.mkdir(exist_ok=True, parents=True)
-        for file in val_files:
-            file.rename(val_dir/file.name)
-
-        test_dir=dataset_path/'test'/d.name
-        test_dir.mkdir(exist_ok=True, parents=True)
-        for file in test_files:
-            file.rename(test_dir/file.name)
+        for file_subset, group in ((val_files, 'valid'), (test_files, 'test'), (train_files, 'train')):
+            current_dir = input_dir/group/sub_dir.name  
+            current_dir.mkdir(exist_ok=True, parents=True)
+            for file in file_subset:
+                shutil.move(file, current_dir/file.name)
+        os.rmdir(sub_dir)
 
 
 if __name__ == '__main__':
     root = Path(r"C:\Users\user\Desktop\dataset\deepfake-vs-real-60k")
 
-    split(root)
+    dataset_split(root, 0.2, 0.1)
