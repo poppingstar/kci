@@ -49,7 +49,7 @@ if __name__ == '__main__':
         input_size = get_input_size(model_name)
         hyper = trainer.TrainConfig(batch_size=64, patience=5, save_point=5, inplace=input_size, workers=16)
 
-        dataset_path = Path(r"C:\Users\user\Desktop\datasets\deepfake and real refiend")
+        dataset_path = Path(r"C:\Users\user\Desktop\dataset\deepfake and real")
         save_dir = dataset_path/'weights'/model_name
         save_dir = trainer.no_overwrite(save_dir)
         
