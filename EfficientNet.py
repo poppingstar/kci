@@ -45,11 +45,11 @@ def get_input_size(model):
 
 if __name__ == '__main__':
     def main():
-        model_name = 'EfficientNet_B2'
+        model_name = 'EfficientNet_B7'
         input_size = get_input_size(model_name)
-        hyper = trainer.TrainConfig(batch_size=64, patience=5, save_point=5, inplace=input_size, workers=16)
+        hyper = trainer.TrainConfig(batch_size=128, patience=5, save_point=5, inplace=input_size, workers=16)
 
-        dataset_path = Path(r"C:\Users\user\Desktop\dataset\deepfake and real")
+        dataset_path = Path(r"C:\Users\user\Desktop\dataset\deepfake-vs-real-60k")
         save_dir = dataset_path/'weights'/model_name
         save_dir = trainer.no_overwrite(save_dir)
         
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         model = model_maker(weights = pre_trained_weight)
         model._get_name()
 
-        # trainer.layer_freeze(model, 'features.8')
+        trainer.layer_freeze(model, 'classifier')
         fc_in_features = model.classifier[1].in_features
         model.classifier[1] = nn.Linear(fc_in_features, out_features=class_num)
 
