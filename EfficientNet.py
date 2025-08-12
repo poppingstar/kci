@@ -47,7 +47,7 @@ if __name__ == '__main__':
     def main():
         model_name = 'EfficientNet_B7'
         input_size = get_input_size(model_name)
-        hyper = trainer.TrainConfig(batch_size=128, patience=5, save_point=5, inplace=input_size, workers=16)
+        hyper = trainer.TrainConfig(batch_size=64, patience=5, save_point=5, inplace=input_size, workers=16)
 
         dataset_path = Path(r"C:\Users\user\Desktop\dataset\deepfake-vs-real-60k")
         save_dir = dataset_path/'weights'/model_name
